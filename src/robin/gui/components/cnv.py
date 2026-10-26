@@ -1728,6 +1728,19 @@ def add_cnv_section(launcher: Any, sample_dir: Path) -> None:
                 ).classes(
                     f"w-full {_CNV_ABS_HEIGHT_CLASS_TALL if _double_height else _CNV_ABS_HEIGHT_CLASS} cnv-genome-abs-chart"
                 )
+            from robin.gui.components.cnv_burden import add_cnv_burden_panel
+
+            def _load_plot_context():
+                current = launcher._cnv_state.get(str(sample_dir), {})
+                values = current.get("cnv") or {}
+                if isinstance(values, dict) and "cnv" in values:
+                    values = values["cnv"]
+                return (values, int(current.get("cnv_dict", {}).get("bin_width", 1)),
+                        current.get("selected_chrom", "All"))
+
+            check_burden_inputs = add_cnv_burden_panel(
+                sample_dir, overlay_chart=cnv_abs, plot_context=_load_plot_context
+            )
             with ui.element("div").classes("w-full target-coverage-panel__plot-wrap mt-2"):
                 cnv_diff = ui.echart(
                     {
@@ -1795,10 +1808,6 @@ def add_cnv_section(launcher: Any, sample_dir: Path) -> None:
                 ).classes("w-full h-[22.5rem] cnv-genome-diff-chart")
             genome_charts = (cnv_abs, cnv_diff)
 
-            ui.separator().classes("mgmt-detail-separator")
-            from robin.gui.components.cnv_burden import add_cnv_burden_panel
-
-            check_burden_inputs = add_cnv_burden_panel(sample_dir)
             ui.separator().classes("mgmt-detail-separator")
             regional_cnv_label = ui.label("Regional CNV events").classes(
                 "target-coverage-panel__meta-label mt-2 mb-1"
@@ -3784,6 +3793,7 @@ def add_cnv_section(launcher: Any, sample_dir: Path) -> None:
 
         launcher._cnv_state[key] = state
         _update_breakpoints_visibility()
+        check_burden_inputs()
 
     async def _refresh_cnv_async() -> None:
         try:

@@ -1,23 +1,31 @@
-# Autosomal CNV burden
+# Copy Numbr Load
 
-Open a sample's **Copy number (CNV)** page and find **Autosomal CNV burden** above
-the regional events table. Select a profile and method, adjust the thresholds
-if needed, then choose **Calculate CNV burden**. Calculation runs in a worker
-thread and does not reopen BAMs. It is on demand, rather than repeated for every
-live CNV update. No additional dependencies are required.
+The **Copy number (CNV)** page now highlights predicted gain regions in red and
+loss regions in blue directly on the existing copy-number plot. The overlay
+follows chromosome selection, zoom and linear/log scale. Toggle **Highlight
+predicted gains (red) and losses (blue)** to compare with the original plot.
+Centromere masking remains applied to the load calculation.
 
-The panel shows gain, loss and total altered percentages, callable/masked/unknown
-base totals, and the number of represented autosomes. An interactive genome plot
-shows sampled bin signal and called segment medians, with masked regions shaded.
-The plot clips signal at ±2 for display only. Its toolbar saves a PNG; the stacked
-bar shows gain, loss and neutral percentages. JSON and TSV downloads retain full
-numeric results, chromosome totals, interval calls, settings and mask checksum.
-Downloads do not write files into the sample directory.
+**Copy Numbr Load** metrics sit directly below that plot: gain, loss, total
+altered percentage, callable/masked/unknown bases and represented autosomes.
+Metrics always refer to all callable represented autosomes, even while viewing
+one chromosome. Calls use the selected load profile, which can differ from the
+raw sample profile underneath the overlay.
 
-CNV input changes clear displayed results and disable downloads on the next CNV
-refresh. Settings changes clear them immediately. A changed input during calculation
-rejects the snapshot. Choose Calculate again after an update. Missing/corrupt inputs
-produce an unavailable message, not a neutral or zero-burden result.
+Load is calculated automatically in the background when CNV files arrive or
+change. A client-scoped timer checks every two seconds; only one calculation
+runs per panel at a time. Switching chromosome/scale/zoom does not rerun calling.
+Changed inputs clear stale calls and downloads while a replacement is calculated.
+Snapshots changed during calculation are rejected. Missing/invalid data produces
+an unavailable message rather than a neutral result. Polling stops when the page
+is disconnected. Calculation time depends on profile resolution and segment count;
+this is an updating estimate, not a guarantee of two-second analysis latency.
+
+Expand **Load calculation settings** to select the input/method/thresholds or
+penalty. **Refresh Copy Numbr Load** allows a manual retry. **How this is
+calculated** explains the assumptions. The percentage bar and JSON/TSV downloads
+remain below the plot. Downloads retain interval calls, chromosome totals, settings
+and mask checksum; sample directories are not modified.
 
 ## Input interpretation
 
