@@ -278,3 +278,9 @@ ROBIN is for **research use** and **support** to clinical decision-making. **Cla
 
 - [Tour of the screens](pages-and-routes.md)  
 - [Troubleshooting](troubleshooting.md)  
+
+### Autosomal CNV burden
+
+The CNV page includes an on-demand gain/loss burden panel with interactive plots,
+ROBIN centromere masking, adjustable calling parameters and JSON/TSV downloads.
+See [Autosomal CNV burden](cnv-burden.md) for the calculation and interpretation.

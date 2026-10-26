@@ -1796,6 +1796,10 @@ def add_cnv_section(launcher: Any, sample_dir: Path) -> None:
             genome_charts = (cnv_abs, cnv_diff)
 
             ui.separator().classes("mgmt-detail-separator")
+            from robin.gui.components.cnv_burden import add_cnv_burden_panel
+
+            check_burden_inputs = add_cnv_burden_panel(sample_dir)
+            ui.separator().classes("mgmt-detail-separator")
             regional_cnv_label = ui.label("Regional CNV events").classes(
                 "target-coverage-panel__meta-label mt-2 mb-1"
             )
@@ -3599,6 +3603,7 @@ def add_cnv_section(launcher: Any, sample_dir: Path) -> None:
         plan: Dict[str, Any], payload: Dict[str, Any]
     ) -> None:
         """Merge disk payload into state and update charts (main thread only)."""
+        check_burden_inputs()
         p = plan
         state = p["state"]
         key = p["key"]
